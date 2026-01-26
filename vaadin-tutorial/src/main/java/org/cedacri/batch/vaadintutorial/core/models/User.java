@@ -1,7 +1,11 @@
 package org.cedacri.batch.vaadintutorial.core.models;
 
+import com.vaadin.copilot.shaded.commons.lang3.RandomStringUtils;
+import com.vaadin.frontendtools.internal.commons.codec.digest.DigestUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,25 +20,51 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "full_name", nullable = false)
-    private String fullName;
-    @Column(name = "email", nullable = false, unique = true)
-    private String email;
-    @Column(name = "login", nullable = false, unique = true)
-    private String login;
     @Column(nullable = false)
-    private String password;
+    private String fullName;
 
-    public User(String fullName, String email, String login, String password) {
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column(nullable = false, unique = true)
+    private String login;
+
+    @Column(nullable = false)
+    private String passwordSalt;
+
+    @Column(nullable = false)
+    private String passwordHash;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    protected User() {}
+
+    public User(String fullName, String email, String login, String rawPassword, Role role) {
         this.fullName = fullName;
         this.email = email;
         this.login = login;
-        this.password = password;
+        this.passwordSalt = RandomStringUtils.random(32);
+        this.passwordHash = DigestUtils.sha256Hex(rawPassword + passwordSalt);
+        this.role = role;
     }
-    public User() {
 
+    public boolean checkPassword(String rawPassword) {
+        return DigestUtils.sha256Hex(rawPassword + passwordSalt)
+                .equals(passwordHash);
     }
 
+    public Role getRole() {
+        return role;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getFullName() {
         return fullName;
@@ -60,20 +90,24 @@ public class User {
         this.login = login;
     }
 
-    public String getPassword() {
-        return password;
+    public String getPasswordSalt() {
+        return passwordSalt;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setPasswordSalt(String passwordSalt) {
+        this.passwordSalt = passwordSalt;
     }
 
-
-    public void setId(Long id) {
-        this.id = id;
+    public String getPasswordHash() {
+        return passwordHash;
     }
 
-    public Long getId() {
-        return id;
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }
+
