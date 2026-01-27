@@ -1,8 +1,8 @@
 package org.cedacri.batch.vaadintutorial.core.utils;
 
-import org.cedacri.batch.vaadintutorial.core.models.Role;
-import org.cedacri.batch.vaadintutorial.core.models.User;
-import org.cedacri.batch.vaadintutorial.repositoties.UserRepository;
+import org.cedacri.batch.vaadintutorial.core.models.entity.Role;
+import org.cedacri.batch.vaadintutorial.core.models.entity.User;
+import org.cedacri.batch.vaadintutorial.core.models.repo.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 

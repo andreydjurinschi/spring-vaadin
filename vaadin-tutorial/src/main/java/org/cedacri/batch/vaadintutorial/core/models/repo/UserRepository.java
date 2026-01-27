@@ -1,6 +1,6 @@
-package org.cedacri.batch.vaadintutorial.repositoties;
+package org.cedacri.batch.vaadintutorial.core.models.repo;
 
-import org.cedacri.batch.vaadintutorial.core.models.User;
+import org.cedacri.batch.vaadintutorial.core.models.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

@@ -11,33 +11,27 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import jakarta.security.auth.message.AuthException;
-import org.cedacri.batch.vaadintutorial.services.AuthService;
+import org.cedacri.batch.vaadintutorial.core.models.service.AuthService;
+import org.cedacri.batch.vaadintutorial.views.main_tmpl.MainView;
 
-@Route(value = "login", autoLayout = false)
+@Route(value = "login", layout = MainView.class)
 @PageTitle("LOGIN")
 @AnonymousAllowed
 public class LoginView extends Div {
-
     public LoginView(AuthService authService) {
         setId("login-view");
         var username = new TextField("Username");
         var password = new PasswordField("Password");
-        Button btn = new Button("СРУСЛУК");
-        btn.addClickListener(e -> {
-            Notification.show("CLICK WORKS");
-            System.out.println("CLICK WORKS");
-        });
-        add(btn);
-        add(new H1("djaskjdnasjkdnjkasndk"),
+        add(new H1("Hello!"),
                 username,
                 password,
-                new Button("asjdmnkasjdnkasjdn", e -> {
+                new Button("Sign in", e -> {
                     try {
                         authService.authenticate(
                                 username.getValue().trim(),
                                 password.getValue().trim()
                         );
-                        UI.getCurrent().navigate("home");
+                        UI.getCurrent().navigate("info");
                     } catch (AuthException ex) {
                         Notification.show(ex.getMessage());
                     }

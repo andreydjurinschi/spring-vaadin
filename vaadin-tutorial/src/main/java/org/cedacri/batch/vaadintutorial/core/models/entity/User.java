@@ -1,4 +1,4 @@
-package org.cedacri.batch.vaadintutorial.core.models;
+package org.cedacri.batch.vaadintutorial.core.models.entity;
 
 import com.vaadin.copilot.shaded.commons.lang3.RandomStringUtils;
 import com.vaadin.frontendtools.internal.commons.codec.digest.DigestUtils;
@@ -9,6 +9,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 // todo: additional entity logic and relationships
@@ -38,7 +39,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    protected User() {}
+    public User() {}
 
     public User(String fullName, String email, String login, String rawPassword, Role role) {
         this.fullName = fullName;
@@ -47,6 +48,16 @@ public class User {
         this.passwordSalt = RandomStringUtils.random(32);
         this.passwordHash = DigestUtils.sha256Hex(rawPassword + passwordSalt);
         this.role = role;
+    }
+
+    @PrePersist
+    private void onCreate() {
+        if (passwordSalt == null) {
+            passwordSalt = RandomStringUtils.random(32);
+        }
+        if (passwordHash == null) {
+            throw new IllegalStateException("Password hash must be set before persisting");
+        }
     }
 
     public boolean checkPassword(String rawPassword) {
@@ -108,6 +119,19 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", fullName='" + fullName + '\'' +
+                ", email='" + email + '\'' +
+                ", login='" + login + '\'' +
+                ", passwordSalt='" + passwordSalt + '\'' +
+                ", passwordHash='" + passwordHash + '\'' +
+                ", role=" + role +
+                '}';
     }
 }
 
