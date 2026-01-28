@@ -13,6 +13,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
 import org.cedacri.batch.vaadintutorial.core.models.entity.Role;
 import org.cedacri.batch.vaadintutorial.core.models.service.AuthService;
+import org.cedacri.batch.vaadintutorial.views.admin.post_contract.PostView;
 import org.cedacri.batch.vaadintutorial.views.admin.user_contract.UserView;
 import org.cedacri.batch.vaadintutorial.views.common.HomeView;
 import org.cedacri.batch.vaadintutorial.views.common.InfoView;
@@ -24,7 +25,7 @@ public class MainView extends AppLayout implements AfterNavigationObserver {
     private static final String APP_NAME = "POST APP";
     private VerticalLayout menu;
 
-    public MainView(AuthService authService) {
+    public MainView() {
         menuInit();
     }
 
@@ -40,7 +41,7 @@ public class MainView extends AppLayout implements AfterNavigationObserver {
         menu.add(
                 new RouterLink("HOME", HomeView.class),
                 new RouterLink("Info", InfoView.class),
-                new RouterLink("HoMe", HomeView.class) // fixme
+                new RouterLink("Posts", PostView.class)
         );
         addToDrawer(menu);
     }

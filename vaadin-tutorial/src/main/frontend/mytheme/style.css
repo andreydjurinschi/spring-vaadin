@@ -1,0 +1,14 @@
+/*login form*/
+
+--vaadin-text-field, --vaadin-password-field{
+    --vaadin-text-field-placeholder-color: #0b2954;
+    --vaadin-text-field-placeholder-border-color: #354b75;
+}
+
+.login-view{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    margin: 0 auto;
+}

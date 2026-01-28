@@ -9,7 +9,12 @@ public interface UserViewContract {
     void showUser(User user);
 
     void createUser();
-    void updateTableAfterCreating(List<User> users);
+
+    void deleteUser(Long id, User user);
+
+    void updateUser(Long id, User user);
+
+    void updateTableAfterChanging(List<User> users);
 
     void showError(String message);
     void navigateHome();

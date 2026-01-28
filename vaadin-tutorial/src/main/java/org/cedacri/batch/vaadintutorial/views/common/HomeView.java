@@ -15,30 +15,21 @@ import org.cedacri.batch.vaadintutorial.views.main_tmpl.MainView;
 @PageTitle("home")
 public class HomeView extends HorizontalLayout {
 
-    private final AuthService authService;
-    private Div content;
-    HomeView(AuthService authService) {
-        this.authService = authService;
-        Role role =  authService.getCurrentRole();
+    private final Div content;
+    HomeView() {
         setSizeFull();
         setSpacing(true);
         setPadding(true);
         content = new Div();
-        renderHomeBlockBasedOnRole(role);
+        renderHomeBlockBasedOnRole();
         add(content);
     }
 
-    private void renderHomeBlockBasedOnRole(Role role){
+    private void renderHomeBlockBasedOnRole(){
 
-        switch (authService.getCurrentRole()) {
-            case role.ADMIN -> {
-                content.add(new AdminHomeView(authService));
-            }
-            case Role.CREATOR ->  {
-                content.add(new H1("Hello Creator"));
-            }
-            case Role.VISITOR ->   {
-                content.add(new H1("Hello Visitor"));
+        switch (AuthService.getCurrentRole()) {
+            case Role.CREATOR, Role.VISITOR, Role.ADMIN ->  {
+                content.add(new H1("Hello " + currentUserFullName()));
             }
             case null -> {
                 content.add(new H1("Hello Anonymous"));
@@ -47,5 +38,9 @@ public class HomeView extends HorizontalLayout {
                 Notification.show("Invalid role");
             }
         }
+    }
+
+    private String currentUserFullName(){
+        return  AuthService.getCurrentUser().getFullName();
     }
 }

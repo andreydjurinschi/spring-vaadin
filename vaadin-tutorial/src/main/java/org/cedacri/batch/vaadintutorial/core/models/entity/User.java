@@ -9,8 +9,12 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+
+import java.util.List;
+import java.util.Objects;
 
 // todo: additional entity logic and relationships
 @Entity
@@ -39,6 +43,11 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    // relations
+
+    @OneToMany(mappedBy = "userCreator")
+    private List<Post> postList;
+
     public User() {}
 
     public User(String fullName, String email, String login, String rawPassword, Role role) {
@@ -63,6 +72,11 @@ public class User {
     public boolean checkPassword(String rawPassword) {
         return DigestUtils.sha256Hex(rawPassword + passwordSalt)
                 .equals(passwordHash);
+    }
+
+    public void setPassword(String rawPassword) {
+        this.passwordSalt = RandomStringUtils.random(32);
+        this.passwordHash = DigestUtils.sha256Hex(rawPassword + passwordSalt);
     }
 
     public Role getRole() {
@@ -121,17 +135,23 @@ public class User {
         this.role = role;
     }
 
+    public List<Post> getPostList() {
+        return postList;
+    }
+
+    public void setPostList(List<Post> postList) {
+        this.postList = postList;
+    }
+
     @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", fullName='" + fullName + '\'' +
-                ", email='" + email + '\'' +
-                ", login='" + login + '\'' +
-                ", passwordSalt='" + passwordSalt + '\'' +
-                ", passwordHash='" + passwordHash + '\'' +
-                ", role=" + role +
-                '}';
+    public boolean equals(Object o) {
+        if (!(o instanceof User user)) return false;
+        return Objects.equals(id, user.id) && Objects.equals(fullName, user.fullName) && Objects.equals(email, user.email) && Objects.equals(login, user.login) && role == user.role;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, fullName, email, login, role);
     }
 }
 

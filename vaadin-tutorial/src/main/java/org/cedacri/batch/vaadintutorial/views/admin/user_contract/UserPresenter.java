@@ -15,35 +15,70 @@ public class UserPresenter {
     }
 
     public void onInit() {
-        if (AuthService.checkUserIsAdmin(AuthService.getCurrentRole())) {
+        if (isAdmin()) {
             userViewContract.showUsers(userService.getAll());
         } else {
-            showErrorAndNavigateHome();
+            showError();
         }
     }
-
     public void onInfo(Long id) {
-        if (AuthService.checkUserIsAdmin(AuthService.getCurrentRole())) {
+        if (isAdmin()) {
             User user = userService.getById(id);
             userViewContract.showUser(user);
         } else {
-            showErrorAndNavigateHome();
+            showError();
         }
     }
 
     public void onCreate(User user) {
-        if (AuthService.checkUserIsAdmin(AuthService.getCurrentRole())) {
+        if (isAdmin()) {
             userService.save(user);
             userViewContract.showUser(user);
-            userViewContract.updateTableAfterCreating(userService.getAll());
+            userViewContract.updateTableAfterChanging(userService.getAll());
         } else {
-            showErrorAndNavigateHome();
+            showError();
         }
     }
 
-    private void showErrorAndNavigateHome() {
+    public void onUpdateRequest(Long id, User user){
+        if(isAdmin()){
+            userViewContract.updateUser(id, user);
+        } else {
+            showError();
+        }
+    }
+
+    public void onUpdateSave(Long id, User user){
+        if(isAdmin()){
+            userService.updateUser(id, user);
+            userViewContract.updateTableAfterChanging(userService.getAll());
+        } else {
+            showError();
+        }
+    }
+
+    public void onDeleteRequest(Long id){
+        if(isAdmin()){
+            User user = userService.getById(id);
+            userViewContract.deleteUser(id, user);
+        }else{
+            showError();
+        }
+    }
+
+    public void onDeleteExecuted(Long id){
+        if(isAdmin()){
+            userService.deleteUser(id);
+            userViewContract.updateTableAfterChanging(userService.getAll());
+        }else{
+            showError();
+        }
+    }
+    private void showError() {
         userViewContract.showError("You are not an admin");
-        userViewContract.navigateHome();
+    }
+    private boolean isAdmin() {
+        return AuthService.checkUserIsAdmin(AuthService.getCurrentRole());
     }
 
 }
