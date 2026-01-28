@@ -19,8 +19,6 @@ import org.cedacri.batch.vaadintutorial.views.common.HomeView;
 import org.cedacri.batch.vaadintutorial.views.common.InfoView;
 import org.cedacri.batch.vaadintutorial.views.common.LoginView;
 
-
-@Route("")
 public class MainView extends AppLayout implements AfterNavigationObserver {
     private static final String APP_NAME = "POST APP";
     private VerticalLayout menu;

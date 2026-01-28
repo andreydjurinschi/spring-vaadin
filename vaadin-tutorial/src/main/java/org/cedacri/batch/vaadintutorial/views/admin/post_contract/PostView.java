@@ -1,20 +1,18 @@
 package org.cedacri.batch.vaadintutorial.views.admin.post_contract;
 
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H3;
-import com.vaadin.flow.component.html.H5;
-import com.vaadin.flow.component.html.Paragraph;
-import com.vaadin.flow.component.html.Param;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.Route;
-import org.apache.catalina.User;
 import org.cedacri.batch.vaadintutorial.core.models.entity.Post;
 import org.cedacri.batch.vaadintutorial.core.models.service.AuthService;
 import org.cedacri.batch.vaadintutorial.core.models.service.post.PostService;
+import org.cedacri.batch.vaadintutorial.views.admin.post_contract.components.PostDialogComponent;
 import org.cedacri.batch.vaadintutorial.views.main_tmpl.MainView;
 
 import java.util.List;
@@ -22,15 +20,28 @@ import java.util.List;
 @Route(value = "posts", layout = MainView.class)
 public class PostView extends Div implements PostViewContract{
 
-    FlexLayout postCards = new FlexLayout();
+
+    private FlexLayout postCards = new FlexLayout();
     private final PostPresenter postPresenter;
-    private final PostService postService;
 
     private Button like;
+    private final Button createButton;
+
+    private Dialog createDialog;
+
+    private Binder<Post> binder = new Binder<>(Post.class);
 
     public PostView(PostService postService) {
-        this.postService = postService;
+
         this.postPresenter = new PostPresenter(postService, this);
+
+        createDialog = new Dialog();
+
+        createButton = new Button("Create", e -> {
+            createPost();
+        });
+
+        add(createButton);
 
         configureLayout();
         postPresenter.onInit();
@@ -87,7 +98,25 @@ public class PostView extends Div implements PostViewContract{
 
     @Override
     public void createPost() {
+        createDialog.removeAll();
+        Post post = new Post();
+        PostDialogComponent postDialogComponent = new PostDialogComponent();
+        postDialogComponent.setPost(post);
 
+        Button create = new Button("Create",  e -> {
+           if(postDialogComponent.write(post)){
+               post.setLikes(0);
+               post.setUserCreator(AuthService.getCurrentUser());
+               postPresenter.onCreatePost(post);
+           }
+        });
+
+        createDialog.add(postDialogComponent);
+        createDialog.add(create);
+        createDialog.add(new Button("Create", e -> {
+            createDialog.close();
+        }));
+        createDialog.open();
     }
 
     @Override
@@ -108,5 +137,13 @@ public class PostView extends Div implements PostViewContract{
     @Override
     public void navigateHome() {
 
+    }
+
+    public Binder<Post> getBinder() {
+        return binder;
+    }
+
+    public void setBinder(Binder<Post> binder) {
+        this.binder = binder;
     }
 }

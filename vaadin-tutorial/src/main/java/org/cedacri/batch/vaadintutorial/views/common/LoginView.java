@@ -6,46 +6,34 @@ import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.Lumo;
-import com.vaadin.flow.theme.lumo.LumoUtility;
 import jakarta.security.auth.message.AuthException;
 import org.cedacri.batch.vaadintutorial.core.models.service.AuthService;
-import org.cedacri.batch.vaadintutorial.views.main_tmpl.MainView;
 
 
-
-@Route(value = "login", layout = MainView.class)
+@Route(value = "login")
 @PageTitle("LOGIN")
 @AnonymousAllowed
 @StyleSheet(Lumo.STYLESHEET)
 /*@CssImport("./mytheme/style.css")*/
-public class LoginView extends Div {
+public class LoginView extends VerticalLayout {
 
     public LoginView(AuthService authService) {
 
         setSizeFull();
+        setAlignItems(Alignment.CENTER);
+        setJustifyContentMode(JustifyContentMode.CENTER);
 
-        var username = new TextField("Username");
-        var password = new PasswordField("Password");
+        TextField username = new TextField("Username");
+        PasswordField password = new PasswordField("Password");
 
-        FormLayout form = renderLayout(authService, username, password);
-
-        add(form);
-
-        addClassNames(
-                LumoUtility.Display.FLEX,
-                LumoUtility.JustifyContent.CENTER,
-                LumoUtility.AlignItems.CENTER
-        );
-    }
-
-    private static FormLayout renderLayout(AuthService authService, TextField username, PasswordField password) {
-        var loginButton = new Button("Sign in", e -> {
+        Button loginButton = new Button("Sign in", e -> {
             try {
                 authService.authenticate(
                         username.getValue().trim(),
@@ -56,9 +44,18 @@ public class LoginView extends Div {
                 Notification.show(ex.getMessage());
             }
         });
+
         FormLayout form = new FormLayout(username, password, loginButton);
-        form.setMaxWidth("320px");
-        return form;
+        form.setWidth("320px");
+
+        Div wrapper = new Div(form);
+        wrapper.getStyle().set("display", "flex");
+        wrapper.getStyle().set("justify-content", "center");
+        wrapper.getStyle().set("align-items", "center");
+        wrapper.setSizeFull();
+
+        add(wrapper);
     }
 }
+
 
