@@ -135,9 +135,6 @@ public class UserView extends Div implements UserViewContract {
         sidePanel.removeAll();
         styleCard(sidePanel);
 
-        sidePanel.removeAll();
-        styleCard(sidePanel);
-
         Button exit = new Button("Exit", e -> sidePanel.setVisible(false));
         H3 question = new H3("Are you sure you want to delete this User?");
         Paragraph paragraph = new Paragraph(user.getFullName());

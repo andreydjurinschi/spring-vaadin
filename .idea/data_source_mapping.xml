@@ -10,6 +10,7 @@
     <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/8ab74b69-4dba-4f51-a176-69bade2c7c89/console_6.sql" value="8ab74b69-4dba-4f51-a176-69bade2c7c89" />
     <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/8ab74b69-4dba-4f51-a176-69bade2c7c89/console_7.sql" value="8ab74b69-4dba-4f51-a176-69bade2c7c89" />
     <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/8ab74b69-4dba-4f51-a176-69bade2c7c89/console_8.sql" value="8ab74b69-4dba-4f51-a176-69bade2c7c89" />
+    <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/8ab74b69-4dba-4f51-a176-69bade2c7c89/console_9.sql" value="8ab74b69-4dba-4f51-a176-69bade2c7c89" />
     <file url="file://$PROJECT_DIR$/vaadin-tutorial/src/main/java/org/cedacri/batch/vaadintutorial/core/models/repo/UserRepository.java" value="8ab74b69-4dba-4f51-a176-69bade2c7c89" />
   </component>
 </project>

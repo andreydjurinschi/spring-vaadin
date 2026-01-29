@@ -65,10 +65,22 @@ public class PostPresenter {
         }
     }
 
-    public void onDeletePost(Long id){
+    public void onDeletePostRequest(Long id){
+        try{
+            if(isUserCreatorOrIsAdmin()){
+                Post post = postService.getById(id);
+                postContract.deletePost(id, post);
+            }
+        }catch(Exception e){
+            showError(e.getMessage());
+        }
+    }
+
+    public void onDeletePostExecuted(Long id){
         try{
             if(isUserCreatorOrIsAdmin()){
                 postService.delete(id);
+                postContract.updatePostsTableAfterChange(postService.allPosts());
             }
         }catch(Exception e){
             showError(e.getMessage());

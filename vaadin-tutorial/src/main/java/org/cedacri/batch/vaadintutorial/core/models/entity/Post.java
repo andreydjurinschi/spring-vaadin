@@ -1,5 +1,6 @@
 package org.cedacri.batch.vaadintutorial.core.models.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -18,6 +19,7 @@ public class Post {
 
     private String title;
 
+    @Column(length = 1000)
     private String content;
 
     private Integer likes;
