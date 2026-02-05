@@ -181,7 +181,6 @@ public class UserView extends Div implements UserViewContract {
     @Override
     public void showError(String message) {
         Notification.show(message, 3000, Notification.Position.MIDDLE);
-        navigateHome();
     }
 
     @Override

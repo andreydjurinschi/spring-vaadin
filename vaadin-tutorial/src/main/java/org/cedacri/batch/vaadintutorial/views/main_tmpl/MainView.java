@@ -9,7 +9,7 @@ import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.AfterNavigationEvent;
 import com.vaadin.flow.router.AfterNavigationObserver;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouteAlias;
 import com.vaadin.flow.router.RouterLink;
 import org.cedacri.batch.vaadintutorial.core.models.entity.Role;
 import org.cedacri.batch.vaadintutorial.core.models.service.AuthService;

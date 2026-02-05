@@ -8,7 +8,6 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.cedacri.batch.vaadintutorial.core.models.entity.Role;
 import org.cedacri.batch.vaadintutorial.core.models.service.AuthService;
-import org.cedacri.batch.vaadintutorial.views.admin.AdminHomeView;
 import org.cedacri.batch.vaadintutorial.views.main_tmpl.MainView;
 
 @Route(value = "home", layout = MainView.class)

@@ -16,7 +16,11 @@ public interface PostViewContract {
 
     void deletePost(Long id, Post post);
 
+    void onLikePost(Long postId);
+    void onLikePostRemove(Long postId);
+
     void showError(String error);
     void navigateHome();
+
 
 }

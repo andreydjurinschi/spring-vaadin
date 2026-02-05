@@ -1,8 +1,10 @@
 package org.cedacri.batch.vaadintutorial.core.models.service.user;
 
-import com.vaadin.copilot.shaded.commons.lang3.StringUtils;
+import org.cedacri.batch.vaadintutorial.core.models.entity.Post;
 import org.cedacri.batch.vaadintutorial.core.models.entity.User;
+import org.cedacri.batch.vaadintutorial.core.models.repo.PostRepository;
 import org.cedacri.batch.vaadintutorial.core.models.repo.UserRepository;
+import org.cedacri.batch.vaadintutorial.core.models.validator.UserValidator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,9 +16,10 @@ import java.util.NoSuchElementException;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-
-    public UserServiceImpl(UserRepository userRepository) {
+    private final PostRepository postRepository;
+    public UserServiceImpl(UserRepository userRepository, PostRepository postRepository) {
         this.userRepository = userRepository;
+        this.postRepository = postRepository;
     }
 
     @Override
@@ -32,29 +35,28 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void save(User user) {
+        UserValidator.validate(user);
         userRepository.save(user);
     }
 
     @Override
     public void updateUser(Long id, User updatedUser) {
         User user = getUser(id);
-        if(StringUtils.isNotBlank(updatedUser.getLogin())) {
-            user.setLogin(updatedUser.getLogin());
-        }
-        if(StringUtils.isNotBlank(updatedUser.getEmail())){
-            user.setEmail(updatedUser.getEmail());
-        }
-        if(StringUtils.isNotBlank(updatedUser.getFullName())){
-            user.setFullName(updatedUser.getFullName());
-        }
-        if(updatedUser.getRole() !=null){
-            user.setRole(updatedUser.getRole());
-        }
+        UserValidator.validate(updatedUser);
+
+        user.setLogin(updatedUser.getLogin());
+        user.setEmail(updatedUser.getEmail());
+        user.setFullName(updatedUser.getFullName());
+        user.setRole(updatedUser.getRole());
     }
 
     @Override
     public void deleteUser(Long id) {
         User user = getUser(id);
+        List<Post> posts = postRepository.findAll();
+        for (Post post : posts) {
+            post.getLikedBy().remove(user);
+        }
         userRepository.delete(user);
     }
 
@@ -63,4 +65,6 @@ public class UserServiceImpl implements UserService {
                 "User with id " + id + " does not exist"));
         return user;
     }
+
+
 }

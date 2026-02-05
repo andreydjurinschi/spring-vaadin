@@ -27,7 +27,6 @@ public class PostView extends Div implements PostViewContract {
 
     private final FlexLayout postCards = new FlexLayout();
     private final PostPresenter postPresenter;
-
     private final Button createButton;
 
     private final Dialog createDialog;
@@ -110,7 +109,6 @@ public class PostView extends Div implements PostViewContract {
 
             actions.add(new H5("Likes: " + post.getLikes()));
 
-            Button likeBtn = new Button("Like");
             Button infoBtn = new Button("Read more", e -> showPost(post));
 
             if (canEditOrDelete(post)) {
@@ -120,14 +118,17 @@ public class PostView extends Div implements PostViewContract {
             }
 
             if (AuthService.isAuthenticated()) {
-                likeBtn.addClickListener(event -> {
-                    System.out.println("Clicked like button"); // TODO: like logic
-                });
-            } else {
-                likeBtn.setEnabled(false);
+                boolean likedByMe = post.getLikedBy()
+                        .contains(AuthService.getCurrentUser());
+
+                Button likeBtn = new Button(likedByMe ? "Unlike" : "Like");
+                likeBtn.addClickListener(e ->
+                        postPresenter.onToggleLike(post.getId())
+                );
+                actions.add(likeBtn);
             }
 
-            actions.add(likeBtn, infoBtn);
+            actions.add(infoBtn);
             card.add(actions);
 
             postCards.add(card);
@@ -242,12 +243,22 @@ public class PostView extends Div implements PostViewContract {
     }
 
     @Override
+    public void onLikePost(Long postId) {
+        Notification.show("Post liked", 3000, Notification.Position.MIDDLE);
+    }
+
+    @Override
+    public void onLikePostRemove(Long postId) {
+        Notification.show("Like removed", 3000, Notification.Position.MIDDLE);
+    }
+
+    @Override
     public void showError(String error) {
 
     }
 
     @Override
     public void navigateHome() {
-        // TODO: реализовать при необходимости
+
     }
 }

@@ -87,6 +87,23 @@ public class PostPresenter {
         }
     }
 
+    public void onToggleLike(Long postId) {
+        try {
+            postService.toggleLike(
+                    postId,
+                    AuthService.getCurrentUser().getId()
+            );
+
+            postContract.updatePostsTableAfterChange(
+                    postService.allPosts()
+            );
+
+        } catch (Exception e) {
+            showError(e.getMessage());
+        }
+    }
+
+
     private void showError(String message){
         postContract.showError(message);
     }

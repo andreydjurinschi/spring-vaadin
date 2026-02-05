@@ -27,6 +27,21 @@ public class AuthService {
         VaadinSession.getCurrent().setAttribute(User.class, user);
     }
 
+    public void register(String login, String email, String fullName, String password){
+        User user = userRepository.findByLogin(login);
+        if(user != null){
+            throw new IllegalStateException("this user already exists");
+        }
+
+        user = new User();
+        user.setLogin(login);
+        user.setPassword(password);
+        user.setEmail(email);
+        user.setFullName(fullName);
+        user.setRole(Role.VISITOR);
+        userRepository.save(user);
+    }
+
 
     public static User getCurrentUser() {
         return VaadinSession.getCurrent().getAttribute(User.class);

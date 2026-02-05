@@ -2,6 +2,7 @@ package org.cedacri.batch.vaadintutorial.core.models.entity;
 
 import com.vaadin.copilot.shaded.commons.lang3.RandomStringUtils;
 import com.vaadin.frontendtools.internal.commons.codec.digest.DigestUtils;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -9,12 +10,15 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 // todo: additional entity logic and relationships
 @Entity
@@ -47,6 +51,9 @@ public class User {
 
     @OneToMany(mappedBy = "userCreator")
     private List<Post> postList;
+
+    @ManyToMany(mappedBy = "likedBy")
+    private Set<Post> likedPosts = new HashSet<>();
 
     public User() {}
 
@@ -143,15 +150,25 @@ public class User {
         this.postList = postList;
     }
 
+    public Set<Post> getLikedPosts() {
+        return likedPosts;
+    }
+
+    public void setLikedPosts(Set<Post> likedPosts) {
+        this.likedPosts = likedPosts;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof User user)) return false;
-        return Objects.equals(id, user.id) && Objects.equals(fullName, user.fullName) && Objects.equals(email, user.email) && Objects.equals(login, user.login) && role == user.role;
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        return id != null && id.equals(((User) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, fullName, email, login, role);
+        return getClass().hashCode();
     }
+
 }
 

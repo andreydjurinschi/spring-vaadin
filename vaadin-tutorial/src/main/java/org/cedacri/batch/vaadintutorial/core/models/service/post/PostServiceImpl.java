@@ -3,7 +3,7 @@ package org.cedacri.batch.vaadintutorial.core.models.service.post;
 import com.vaadin.copilot.shaded.commons.lang3.StringUtils;
 import org.cedacri.batch.vaadintutorial.core.models.entity.Post;
 import org.cedacri.batch.vaadintutorial.core.models.repo.PostRepository;
-import org.springframework.data.domain.Sort;
+import org.cedacri.batch.vaadintutorial.core.models.service.AuthService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +21,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Post> allPosts() {
-        return postRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
+        return postRepository.findAllWithLikes();
     }
 
     @Override
@@ -35,15 +35,15 @@ public class PostServiceImpl implements PostService {
         postRepository.save(post);
     }
 
-    @Override
     @Transactional
+    @Override
     public void delete(Long id) {
         Post post = findPostById(id);
         postRepository.delete(post);
     }
 
-    @Override
     @Transactional
+    @Override
     public void update(Long id, Post post) {
         Post postToUpdate = findPostById(id);
         if(StringUtils.isNotBlank(post.getTitle())) {
@@ -58,10 +58,20 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void addLike(Long postId) {
-        findPostById(postId);
-        postRepository.updatePostAddLike(postId);
+    @Transactional
+    public void toggleLike(Long postId, Long userId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow();
+
+        if (postRepository.isPostLikedByUser(postId, userId)) {
+            post.getLikedBy().remove(AuthService.getCurrentUser());
+            post.setLikes(post.getLikes() - 1);
+        } else {
+            post.getLikedBy().add(AuthService.getCurrentUser());
+            post.setLikes(post.getLikes() + 1);
+        }
     }
+
 
     private Post findPostById(Long postId) {
         return postRepository.findById(postId).orElseThrow(() -> new NoSuchElementException("asdasd"));

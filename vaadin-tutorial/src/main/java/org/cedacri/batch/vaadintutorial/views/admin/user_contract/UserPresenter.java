@@ -18,65 +18,75 @@ public class UserPresenter {
         if (isAdmin()) {
             userViewContract.showUsers(userService.getAll());
         } else {
-            showError();
+            showError("Method not allowed");
         }
     }
+
     public void onInfo(Long id) {
         if (isAdmin()) {
             User user = userService.getById(id);
             userViewContract.showUser(user);
         } else {
-            showError();
+            showError("Method not allowed");
         }
     }
 
     public void onCreate(User user) {
         if (isAdmin()) {
-            userService.save(user);
-            userViewContract.showUser(user);
-            userViewContract.updateTableAfterChanging(userService.getAll());
+            try {
+                userService.save(user);
+                userViewContract.updateTableAfterChanging(userService.getAll());
+            } catch (Exception e) {
+                showError(e.getMessage());
+            }
         } else {
-            showError();
+            showError("Method not allowed");
         }
     }
 
-    public void onUpdateRequest(Long id, User user){
-        if(isAdmin()){
+    public void onUpdateRequest(Long id, User user) {
+        if (isAdmin()) {
             userViewContract.updateUser(id, user);
         } else {
-            showError();
+            showError("Method not allowed");
         }
     }
 
-    public void onUpdateSave(Long id, User user){
-        if(isAdmin()){
-            userService.updateUser(id, user);
+    public void onUpdateSave(Long id, User user) {
+        if (isAdmin()) {
+            try {
+                userService.updateUser(id, user);
+            } catch (Exception e) {
+                userViewContract.showError(e.getLocalizedMessage());
+            }
             userViewContract.updateTableAfterChanging(userService.getAll());
         } else {
-            showError();
+            showError("Method not allowed");
         }
     }
 
-    public void onDeleteRequest(Long id){
-        if(isAdmin()){
+    public void onDeleteRequest(Long id) {
+        if (isAdmin()) {
             User user = userService.getById(id);
             userViewContract.deleteUser(id, user);
-        }else{
-            showError();
+        } else {
+            showError("Delete pr");
         }
     }
 
-    public void onDeleteExecuted(Long id){
-        if(isAdmin()){
+    public void onDeleteExecuted(Long id) {
+        if (isAdmin()) {
             userService.deleteUser(id);
             userViewContract.updateTableAfterChanging(userService.getAll());
-        }else{
-            showError();
+        } else {
+            showError("Delete pr");
         }
     }
-    private void showError() {
-        userViewContract.showError("You are not an admin");
+
+    private void showError(String message) {
+        userViewContract.showError(message);
     }
+
     private boolean isAdmin() {
         return AuthService.checkUserIsAdmin(AuthService.getCurrentRole());
     }
